@@ -1,4 +1,4 @@
-# Postgres 15.0 Dockerized w/ Replication
+# Postgres 14.4 Dockerized w/ Replication
 
 Master/Slave Postgres Replication in 30 seconds.
 
