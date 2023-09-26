@@ -74,11 +74,14 @@ if [ "$1" = 'postgres' ]; then
 		fi
 
 		{ echo; echo "host replication all 0.0.0.0/0 $authMethod"; } | gosu postgres tee -a "$PGDATA/pg_hba.conf" > /dev/null
+		{ echo; echo "host replication all 0.0.0.0/0 md5"; } | gosu postgres tee -a "$PGDATA/pg_hba.conf" > /dev/null
+		{ echo; echo "host replication all 0.0.0.0/0 trust"; } | gosu postgres tee -a "$PGDATA/pg_hba.conf" > /dev/null
+		{ echo; echo "host replication all 0.0.0.0/0 scram-sha-256"; } | gosu postgres tee -a "$PGDATA/pg_hba.conf" > /dev/null
 		{ echo; echo "host all all 0.0.0.0/0 $authMethod"; } | gosu postgres tee -a "$PGDATA/pg_hba.conf" > /dev/null
 
 		if [ "x$REPLICATE_FROM" == "x" ]; then
 
-			# internal start of server in order to allow set-up using psql-client		
+			# internal start of server in order to allow set-up using psql-client
 			# does not listen on external TCP/IP and waits until start finishes
 			gosu postgres pg_ctl -D "$PGDATA" \
 				-o "-c listen_addresses='localhost'" \
@@ -106,7 +109,7 @@ if [ "$1" = 'postgres' ]; then
 				$op USER "$POSTGRES_USER" WITH SUPERUSER $pass ;
 			EOSQL
 			echo
-		
+
 		fi
 
 		psql+=( --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" )
